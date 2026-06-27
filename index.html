@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shahid Ali — Finance Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --ink:#000000;
+    --ink-soft:#0A0A0A;
+    --ink-card:#101010;
+    --cream:#ECE4D3;
+    --cream-dim:rgba(236,228,211,0.62);
+    --cream-faint:rgba(236,228,211,0.4);
+    --gold:#C9A227;
+    --gold-soft:#E0C25E;
+    --line:rgba(236,228,211,0.13);
+    --line-strong:rgba(236,228,211,0.26);
+
+    --display:'Anton', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+    --sans:'Inter', -apple-system, sans-serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink); color:var(--cream);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  .wrap{max-width:1080px; margin:0 auto; padding:0 28px;}
+
+  .skip-link{
+    position:absolute; left:-999px; top:0; background:var(--gold); color:var(--ink);
+    padding:10px 16px; z-index:200; font-family:var(--mono); font-size:12px;
+  }
+  .skip-link:focus{left:12px; top:12px;}
+  :focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+
+  /* ---------- shared "ledger-cut" giant headline ---------- */
+  .giant{
+    font-family:var(--display);
+    font-weight:400;
+    text-transform:uppercase;
+    line-height:0.86;
+    letter-spacing:-0.01em;
+    color:var(--cream);
+    background-image:repeating-linear-gradient(
+      to bottom,
+      var(--cream) 0px, var(--cream) 37px,
+      var(--ink) 37px, var(--ink) 38px
+    );
+    -webkit-background-clip:text;
+    background-clip:text;
+  }
+  @supports not (background-clip: text){
+    .giant{ -webkit-text-fill-color:var(--cream); background-image:none; }
+  }
+
+  .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--gold); display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:''; width:18px; height:1px; background:var(--gold); display:inline-block;}
+  .hairline{border:none; border-top:1px solid var(--line); margin:0;}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    background:rgba(20,19,16,0.86); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:62px;}
+  .nav-mark{font-family:var(--mono); font-size:13px; letter-spacing:0.06em; color:var(--cream); font-weight:600;}
+  .nav-mark span{color:var(--gold);}
+  .nav-links{display:flex; gap:24px; font-family:var(--mono); font-size:11px; letter-spacing:0.05em; text-transform:uppercase;}
+  .nav-links a{color:var(--cream-dim); position:relative; padding:4px 0;}
+  .nav-links a:hover{color:var(--cream);}
+  .nav-links a::after{
+    content:''; position:absolute; bottom:0; left:0; right:0; height:1px;
+    background:var(--gold); transform:scaleX(0); transform-origin:left; transition:transform .25s ease;
+  }
+  .nav-links a:hover::after{transform:scaleX(1);}
+  .nav-cta{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.05em; text-transform:uppercase;
+    border:1px solid var(--gold); color:var(--gold-soft); padding:8px 16px;
+    transition:background .2s, color .2s;
+  }
+  .nav-cta:hover{background:var(--gold); color:var(--ink);}
+  .nav-toggle{display:none; flex-direction:column; gap:4px; cursor:pointer; background:none; border:none; padding:6px;}
+  .nav-toggle span{width:20px; height:1.5px; background:var(--cream);}
+  @media (max-width:880px){
+    .nav-links, .nav-cta{display:none;}
+    .nav-toggle{display:flex;}
+  }
+  .mobile-menu{display:none; flex-direction:column; background:var(--ink); border-bottom:1px solid var(--line);}
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{
+    padding:16px 28px; font-family:var(--mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase;
+    border-top:1px solid var(--line); color:var(--cream);
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; padding-top:62px; min-height:100vh;
+    display:flex; flex-direction:column; justify-content:center;
+    background:
+      repeating-linear-gradient(to bottom, rgba(236,228,211,0.025) 0px, rgba(236,228,211,0.025) 1px, transparent 1px, transparent 48px);
+  }
+  .hero-scroll-cue{
+    position:absolute; top:84px; right:28px; z-index:4;
+    display:flex; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--cream-faint);
+  }
+  .hero-scroll-cue svg{animation:bob 1.8s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(5px);}}
+
+  .giant-word-wrap{position:relative; display:flex; justify-content:center; align-items:center; padding:0 0 10px;}
+  .hero-giant{font-size:clamp(58px,15.5vw,200px); text-align:center;}
+  .hero-photo-frame{
+    position:absolute; left:50%; top:48%; transform:translate(-50%,-50%);
+    width:clamp(150px,19vw,260px); height:clamp(200px,26vw,350px);
+    z-index:3; overflow:hidden; box-shadow:0 36px 70px -24px rgba(0,0,0,0.65);
+    border:1px solid var(--line-strong);
+  }
+  .hero-photo-frame img{width:100%; height:100%; object-fit:cover; display:block;}
+  .hero-photo-placeholder{
+    width:100%; height:100%;
+    background:linear-gradient(160deg,#1a1a1a,#0a0a0a);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  }
+  .hero-monogram{font-family:var(--display); font-size:clamp(28px,4vw,44px); color:var(--gold-soft); letter-spacing:0.02em;}
+  .hero-photo-caption{font-family:var(--mono); font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--cream-faint); text-align:center; padding:0 14px;}
+
+  .hero-foot-row{
+    display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:10px;
+    border-top:1px solid var(--line); margin-top:32px; padding-top:18px;
+    font-family:var(--mono); font-size:12px; letter-spacing:0.04em;
+  }
+  .hero-name-tag{color:var(--cream);}
+  .hero-loc-tag{color:var(--cream-faint); text-transform:uppercase;}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  /* ---------- section shell ---------- */
+  section{padding:108px 0;}
+  .section-eyebrow{margin-bottom:14px;}
+
+  /* ---------- introduction ---------- */
+  .intro-banner{
+    position:relative; height:170px; margin-top:6px;
+    background:
+      repeating-linear-gradient(118deg, rgba(201,162,39,0.10) 0px, rgba(201,162,39,0.10) 2px, transparent 2px, transparent 26px),
+      linear-gradient(180deg, var(--ink-soft), var(--ink));
+    border:1px solid var(--line);
+  }
+  .intro-banner .giant{position:absolute; left:6px; bottom:-30px; font-size:clamp(40px,9vw,108px);}
+  .intro-text{margin-top:96px; font-size:18px; line-height:1.7; color:var(--cream); max-width:680px;}
+  .intro-text strong{color:var(--gold-soft);}
+
+  /* ---------- about (name + bio + skyline) ---------- */
+  .about{position:relative; overflow:hidden;}
+  .about-skyline{position:absolute; left:0; right:0; bottom:0; height:200px; opacity:0.10; z-index:0; pointer-events:none;}
+  .about-grid{position:relative; z-index:1; display:grid; grid-template-columns:0.8fr 1.2fr; gap:48px; align-items:start;}
+  @media (max-width:780px){.about-grid{grid-template-columns:1fr; gap:24px;}}
+  .about-name{font-size:clamp(40px,7vw,76px);}
+  .about-copy p{font-size:15.5px; line-height:1.75; color:var(--cream-dim); margin-bottom:18px;}
+  .about-copy p:last-child{margin-bottom:0;}
+
+  /* ---------- skills ---------- */
+  .skills-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:48px; border:1px solid var(--line);}
+  @media (max-width:880px){.skills-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:520px){.skills-grid{grid-template-columns:1fr;}}
+  .skill-col{padding:26px 24px; border-right:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .skills-grid .skill-col:nth-child(4n){border-right:none;}
+  @media (max-width:880px){.skills-grid .skill-col:nth-child(2n){border-right:none;} .skills-grid .skill-col:nth-child(4n){border-right:1px solid var(--line);}}
+  @media (max-width:520px){.skills-grid .skill-col{border-right:none !important;}}
+  .skill-col-head{font-family:var(--mono); font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--gold); margin-bottom:16px;}
+  .skill-col ul{list-style:none;}
+  .skill-col li{
+    font-size:13.8px; color:var(--cream-dim); padding:10px 0; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; gap:8px; align-items:baseline;
+  }
+  .skill-col li:first-child{border-top:none;}
+  .tag-mini{font-family:var(--mono); font-size:9px; letter-spacing:0.05em; text-transform:uppercase; color:var(--gold-soft); white-space:nowrap;}
+
+  /* ---------- education ---------- */
+  .statement{border-top:1px solid var(--line); margin-top:48px;}
+  .line-item{border-bottom:1px solid var(--line); padding:30px 0; display:grid; grid-template-columns:160px 1fr; gap:24px;}
+  @media (max-width:640px){.line-item{grid-template-columns:1fr; gap:8px;}}
+  .li-period{font-family:var(--mono); font-size:12px; color:var(--gold); letter-spacing:0.03em;}
+  .li-period .dim{color:var(--cream-faint); display:block; margin-top:4px;}
+  .li-title{font-family:var(--sans); font-weight:700; font-size:21px; color:var(--cream);}
+  .li-org{font-size:13.5px; color:var(--cream-faint); margin-top:3px;}
+  .li-body{font-size:14.5px; line-height:1.7; color:var(--cream-dim); margin-top:12px; max-width:640px;}
+  .li-tags{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;}
+  .tag{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase;
+    border:1px solid var(--line-strong); color:var(--cream-dim); padding:5px 10px;
+  }
+  .grade-chip{font-family:var(--mono); font-size:10px; padding:3px 8px; background:var(--ink-soft); border:1px solid var(--line-strong); color:var(--gold-soft);}
+
+  .ledger-table{width:100%; border-collapse:collapse; margin-top:18px; font-size:13.5px;}
+  .ledger-table th{
+    text-align:left; font-family:var(--mono); font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--cream-faint); padding:9px 10px; border-bottom:1px solid var(--line-strong);
+  }
+  .ledger-table td{padding:10px 10px; border-bottom:1px solid var(--line); color:var(--cream-dim);}
+  .ledger-table tr:hover td{background:rgba(201,162,39,0.06);}
+  .ledger-table .num{font-family:var(--mono); text-align:right;}
+
+  .footnote-box{
+    border:1px dashed var(--line-strong); background:var(--ink-soft);
+    padding:18px 22px; font-size:12.5px; color:var(--cream-dim); line-height:1.65; margin-top:40px;
+  }
+  .footnote-box strong{color:var(--gold-soft);}
+
+  /* ---------- projects ---------- */
+  .project-grid{display:grid; gap:22px; grid-template-columns:repeat(3,1fr); margin-top:48px;}
+  @media (max-width:900px){.project-grid{grid-template-columns:1fr;}}
+  .project-card{background:var(--ink-card); border:1px solid var(--line);}
+  .project-head{display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--line);}
+  .project-code{font-family:var(--mono); font-size:10.5px; color:var(--gold-soft); letter-spacing:0.06em; text-transform:uppercase;}
+  .project-icon{width:26px; height:26px; color:var(--gold);}
+  .project-body{padding:22px;}
+  .project-title{font-family:var(--sans); font-weight:700; font-size:18.5px; color:var(--cream); margin-bottom:12px; line-height:1.3;}
+  .project-list{list-style:none; margin-bottom:16px;}
+  .project-list li{font-size:13.3px; line-height:1.6; color:var(--cream-dim); padding-left:16px; position:relative; margin-bottom:7px;}
+  .project-list li::before{content:'—'; position:absolute; left:0; color:var(--gold);}
+  .project-tags{display:flex; flex-wrap:wrap; gap:6px;}
+
+  /* ---------- experience ---------- */
+  .xp-block{padding:28px 0; border-bottom:1px solid var(--line);}
+  .xp-head{display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; align-items:baseline; margin-bottom:14px;}
+  .xp-title{font-family:var(--sans); font-weight:700; font-size:19px; color:var(--cream);}
+  .xp-meta{font-family:var(--mono); font-size:11.5px; color:var(--gold-soft); letter-spacing:0.03em;}
+  .xp-list{list-style:none;}
+  .xp-list li{font-size:14px; line-height:1.65; color:var(--cream-dim); padding-left:18px; position:relative; margin-bottom:8px;}
+  .xp-list li::before{content:'•'; position:absolute; left:0; color:var(--gold);}
+
+  /* ---------- why hire me ---------- */
+  .why-grid{display:grid; grid-template-columns:1.3fr 0.7fr; gap:48px; align-items:center; margin-top:40px;}
+  @media (max-width:780px){.why-grid{grid-template-columns:1fr;}}
+  .why-text{font-size:16.5px; line-height:1.75; color:var(--cream-dim);}
+  .why-chart{width:100%; height:auto;}
+
+  /* ---------- contact ---------- */
+  .closing{background:var(--ink-soft); position:relative; border-top:1px solid var(--line);}
+  .closing-title{font-family:var(--display); text-transform:uppercase; font-size:clamp(32px,6vw,64px); line-height:1; max-width:680px;}
+  .closing-sub{font-size:16px; color:var(--cream-dim); margin-top:20px; max-width:520px; line-height:1.65;}
+  .closing-actions{display:flex; gap:14px; margin-top:36px; flex-wrap:wrap;}
+  .btn{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase;
+    padding:14px 26px; display:inline-flex; align-items:center; gap:10px; transition:transform .2s, background .2s, color .2s;
+  }
+  .btn-gold{background:var(--gold); color:var(--ink);}
+  .btn-gold:hover{transform:translateY(-2px); background:var(--gold-soft);}
+  .btn-outline{border:1px solid var(--line-strong); color:var(--cream);}
+  .btn-outline:hover{background:rgba(236,228,211,0.06); transform:translateY(-2px);}
+
+  .contact-grid{margin-top:64px; display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--line);}
+  @media (max-width:760px){.contact-grid{grid-template-columns:1fr;}}
+  .contact-item{padding:24px 0; border-right:1px solid var(--line);}
+  .contact-item:last-child{border-right:none;}
+  @media (max-width:760px){.contact-item{border-right:none; border-bottom:1px solid var(--line);}}
+  .ci-label{font-family:var(--mono); font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-soft); margin-bottom:8px;}
+  .ci-value{font-size:15px;}
+  .ci-value a:hover{color:var(--gold-soft);}
+
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:30px;}
+  @media (max-width:640px){.form-row{grid-template-columns:1fr;}}
+  .field{display:flex; flex-direction:column; gap:8px;}
+  .field label{font-family:var(--mono); font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--cream-faint);}
+  .field input, .field textarea{
+    background:rgba(236,228,211,0.04); border:1px solid var(--line-strong); color:var(--cream);
+    padding:12px 14px; font-family:var(--sans); font-size:14px;
+  }
+  .field input:focus, .field textarea:focus{outline:2px solid var(--gold); outline-offset:1px; border-color:var(--gold);}
+  .field-full{grid-column:1/-1;}
+  .submit-row{margin-top:22px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+  .form-note{font-size:12px; color:var(--cream-faint);}
+
+  footer{background:var(--ink); color:var(--cream-faint); font-family:var(--mono); font-size:11px; letter-spacing:0.04em; padding:22px 0; border-top:1px solid var(--line);}
+  footer .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <div class="nav-mark">SHAHID<span>·</span>ALI</div>
+    <div class="nav-links">
+      <a href="#introduction">Introduction</a>
+      <a href="#skills">Skills</a>
+      <a href="#education">Education</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="#" class="nav-cta" id="resumeBtnTop">Résumé ↓</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#introduction">Introduction</a>
+    <a href="#skills">Skills</a>
+    <a href="#education">Education</a>
+    <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-scroll-cue">
+      Scroll
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16M5 13l7 7 7-7"/></svg>
+    </div>
+    <div class="wrap">
+      <div class="giant-word-wrap">
+        <h1 class="giant hero-giant">PORTFOLIO</h1>
+        <div class="hero-photo-frame">
+          <!-- Swap this placeholder div for <img src="your-photo.jpg" alt="Shahid Ali"> once a real photo is supplied -->
+          <div class="hero-photo-placeholder">
+            <span class="hero-monogram">S·A</span>
+            <span class="hero-photo-caption">Photo to be added</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-foot-row">
+        <span class="hero-name-tag">Shahid Ali — Finance Undergraduate</span>
+        <span class="hero-loc-tag">Karachi, PK · Class of 2028</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- INTRODUCTION -->
+  <section id="introduction">
+    <div class="wrap">
+      <div class="eyebrow section-eyebrow reveal">Personal Statement</div>
+      <div class="intro-banner reveal">
+        <h2 class="giant">INTRODUCTION</h2>
+      </div>
+      <p class="intro-text reveal">
+        Hello, I'm <strong>Shahid</strong>. A finance undergraduate with a growing specialism in
+        <strong>corporate finance, taxation, and investment analysis</strong>. With hands-on experience across
+        brand strategy, venture design, and applied financial coursework, I aim for work that's analytically
+        sound and commercially grounded. Through coursework ventures and an independent research project with
+        a regulated bank, I've had the chance to test theory against how finance actually runs.
+      </p>
+    </div>
+  </section>
+
+  <hr class="hairline">
+
+  <!-- ABOUT -->
+  <section class="about">
+    <svg class="about-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
+      <rect x="0" y="130" width="70" height="90" fill="var(--gold)"/>
+      <rect x="80" y="90" width="50" height="130" fill="var(--gold)"/>
+      <rect x="140" y="150" width="40" height="70" fill="var(--gold)"/>
+      <rect x="190" y="60" width="60" height="160" fill="var(--gold)"/>
+      <rect x="260" y="110" width="34" height="110" fill="var(--gold)"/>
+      <rect x="305" y="40" width="46" height="180" fill="var(--gold)"/>
+      <rect x="360" y="100" width="56" height="120" fill="var(--gold)"/>
+      <rect x="430" y="150" width="38" height="70" fill="var(--gold)"/>
+      <rect x="480" y="75" width="64" height="145" fill="var(--gold)"/>
+      <rect x="560" y="120" width="40" height="100" fill="var(--gold)"/>
+      <rect x="612" y="20" width="50" height="200" fill="var(--gold)"/>
+      <rect x="676" y="95" width="60" height="125" fill="var(--gold)"/>
+      <rect x="748" y="140" width="36" height="80" fill="var(--gold)"/>
+      <rect x="796" y="65" width="58" height="155" fill="var(--gold)"/>
+      <rect x="866" y="115" width="42" height="105" fill="var(--gold)"/>
+      <rect x="920" y="50" width="48" height="170" fill="var(--gold)"/>
+      <rect x="980" y="135" width="60" height="85" fill="var(--gold)"/>
+      <rect x="1052" y="90" width="40" height="130" fill="var(--gold)"/>
+      <rect x="1104" y="150" width="96" height="70" fill="var(--gold)"/>
+    </svg>
+    <div class="wrap about-grid">
+      <h2 class="giant about-name reveal">SHAHID<br>ALI</h2>
+      <div class="about-copy reveal">
+        <p>
+          I'm Shahid, a BBA student majoring in Accounting &amp; Finance at Bahria University, Karachi, with a
+          clear path toward corporate finance — taxation, audit, and investment analysis in particular. Since
+          2024, I've been building a foundation across financial and managerial accounting, economics, and
+          business statistics, while testing that knowledge against real projects rather than leaving it on
+          the page.
+        </p>
+        <p>
+          Alongside coursework, I've developed a brand from research through to launch, co-designed a
+          space-booking venture modelled on Airbnb, and interviewed Meezan Bank's management team to
+          understand how a regulated financial institution actually runs. I'm currently extending my
+          analytical toolkit with SQL, Power BI, and advanced Excel, and I bring disciplined client
+          communication from prior customer service and sales roles. I'm looking for work that holds up under
+          scrutiny — accurate, well-reasoned, and useful to the people relying on it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hairline">
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="wrap">
+      <div class="eyebrow section-eyebrow reveal">Full Capability Set</div>
+      <h2 class="giant reveal" style="font-size:clamp(40px,9vw,108px);">SKILLS</h2>
+
+      <div class="skills-grid reveal">
+        <div class="skill-col">
+          <div class="skill-col-head">Finance &amp; Accounting</div>
+          <ul>
+            <li>Financial Statement Analysis</li>
+            <li>Stock &amp; Bond Valuation</li>
+            <li>Financial &amp; Managerial Accounting</li>
+            <li>Budgeting &amp; Reporting</li>
+            <li>Corporate Finance Fundamentals</li>
+          </ul>
+        </div>
+        <div class="skill-col">
+          <div class="skill-col-head">Data &amp; Analytics</div>
+          <ul>
+            <li>Excel for Finance</li>
+            <li>SQL <span class="tag-mini">Developing</span></li>
+            <li>Power BI <span class="tag-mini">Developing</span></li>
+            <li>Business Statistics &amp; Inference</li>
+          </ul>
+        </div>
+        <div class="skill-col">
+          <div class="skill-col-head">Business &amp; Strategy</div>
+          <ul>
+            <li>Market Research &amp; Analysis</li>
+            <li>Brand Positioning &amp; Development</li>
+            <li>Consumer Behaviour Analysis</li>
+            <li>Business Development</li>
+          </ul>
+        </div>
+        <div class="skill-col">
+          <div class="skill-col-head">Professional</div>
+          <ul>
+            <li>Client &amp; Customer Communication</li>
+            <li>Persuasive &amp; Outbound Sales</li>
+            <li>Cross-Functional Teamwork</li>
+            <li>Process Training &amp; Retention</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hairline">
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="wrap">
+      <div class="eyebrow section-eyebrow reveal">Academic Record</div>
+      <h2 class="giant reveal" style="font-size:clamp(40px,9vw,108px);">EDUCATION</h2>
+
+      <div class="statement reveal">
+        <div class="line-item">
+          <div class="li-period">2024 — 2028<span class="dim">Bahria University, Karachi</span></div>
+          <div>
+            <div class="li-title">BBA, Major in Accounting &amp; Finance</div>
+            <div class="li-org">Currently in second year · Karachi Campus</div>
+            <div class="li-body">
+              Coursework spans corporate finance, financial &amp; managerial accounting, micro/macroeconomics,
+              marketing management, HR management, business statistics, and environmental sustainability — a
+              deliberately broad base for roles that sit between finance and the rest of the business.
+            </div>
+            <div class="li-tags">
+              <span class="tag">Accounting &amp; Finance</span>
+              <span class="tag">Business Statistics</span>
+              <span class="tag">Economics</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="line-item">
+          <div class="li-period">In Progress<span class="dim">Self-Directed</span></div>
+          <div>
+            <div class="li-title">Data Analytics &amp; Visualisation for Finance</div>
+            <div class="li-org">Coursework in SQL, Power BI &amp; advanced Excel</div>
+            <div class="li-body">
+              Building the analytical toolkit finance teams run on day to day — querying data with SQL,
+              building dashboards in Power BI, and modelling in Excel — alongside the BBA core.
+            </div>
+            <div class="li-tags">
+              <span class="tag">SQL — Developing</span>
+              <span class="tag">Power BI — Developing</span>
+              <span class="tag">Excel — Applied</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal" style="margin-top:56px;">
+        <div class="eyebrow" style="margin-bottom:18px;">Course Ledger — by Discipline</div>
+        <table class="ledger-table">
+          <thead>
+            <tr><th>Discipline</th><th>Courses Completed</th><th class="num">Grade Band</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Finance &amp; Accounting</td>
+              <td>Fundamentals of Finance, Financial Accounting, Principles of Accounting</td>
+              <td class="num"><span class="grade-chip">B range</span></td>
+            </tr>
+            <tr>
+              <td>Marketing</td>
+              <td>Principles of Marketing, Marketing Management</td>
+              <td class="num"><span class="grade-chip">A range</span></td>
+            </tr>
+            <tr>
+              <td>Management &amp; HR</td>
+              <td>Principles of Management, Organizational Theory &amp; Behavior, HR Management</td>
+              <td class="num"><span class="grade-chip">B range</span></td>
+            </tr>
+            <tr>
+              <td>Economics &amp; Statistics</td>
+              <td>Microeconomics, Macroeconomics, Business Statistics, Statistical Inference</td>
+              <td class="num"><span class="grade-chip">A&#8211;/B range</span></td>
+            </tr>
+            <tr>
+              <td>Sustainability &amp; Society</td>
+              <td>Environment &amp; Sustainability, Sociology, Civic &amp; Community Engagement</td>
+              <td class="num"><span class="grade-chip">A range</span></td>
+            </tr>
+            <tr>
+              <td>Communication &amp; Method</td>
+              <td>Functional English, Oral Communication, Critical &amp; Logical Thinking, IT in Business</td>
+              <td class="num"><span class="grade-chip">B range</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="footnote-box">
+          <strong>Note on disclosure —</strong> Grades are summarised by band rather than per-course transcript
+          detail, in keeping with how academic record is typically presented in a professional portfolio. Full
+          transcript available on request.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hairline">
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="wrap">
+      <div class="eyebrow section-eyebrow reveal">Applied Coursework Ventures</div>
+      <h2 class="giant reveal" style="font-size:clamp(40px,9vw,108px);">PROJECTS</h2>
+
+      <div class="project-grid reveal">
+
+        <div class="project-card">
+          <div class="project-head">
+            <span class="project-code">PRJ 01 · Marketing</span>
+            <svg class="project-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M6 21V10M11 21V4M16 21v-7M21 21V8"/></svg>
+          </div>
+          <div class="project-body">
+            <div class="project-title">Brand Development &amp; Market Positioning</div>
+            <ul class="project-list">
+              <li>Ran market surveys to size demand and validate the concept</li>
+              <li>Mapped core competitors and identified a positioning gap</li>
+              <li>Defined and managed brand strategy through the course term</li>
+            </ul>
+            <div class="project-tags">
+              <span class="tag">Market Research</span>
+              <span class="tag">Brand Strategy</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-head">
+            <span class="project-code">PRJ 02 · Entrepreneurship</span>
+            <svg class="project-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 11l9-7 9 7M5 10v10h14V10M9 20v-6h6v6"/></svg>
+          </div>
+          <div class="project-body">
+            <div class="project-title">Space-Booking Platform — Airbnb-for-Events Model</div>
+            <ul class="project-list">
+              <li>Designed the core listing &amp; booking business model</li>
+              <li>Scoped add-on services: events management and catering</li>
+              <li>Partnered with a teammate on the website build</li>
+            </ul>
+            <div class="project-tags">
+              <span class="tag">Venture Design</span>
+              <span class="tag">Service Design</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-head">
+            <span class="project-code">PRJ 03 · Management</span>
+            <svg class="project-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M4 21V9l8-5 8 5v12M9 21v-6h6v6"/></svg>
+          </div>
+          <div class="project-body">
+            <div class="project-title">Management Practices Study — Meezan Bank</div>
+            <ul class="project-list">
+              <li>Interviewed bank staff on management roles and structure</li>
+              <li>Analysed how the institution manages employees and operations</li>
+              <li>Synthesised findings against course management theory</li>
+            </ul>
+            <div class="project-tags">
+              <span class="tag">Primary Research</span>
+              <span class="tag">Banking Sector</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="hairline">
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="wrap">
+      <div class="eyebrow section-eyebrow reveal">Employment Record</div>
+      <h2 class="giant reveal" style="font-size:clamp(40px,9vw,108px);">EXPERIENCE</h2>
+
+      <div class="reveal" style="margin-top:44px;">
+        <div class="xp-block">
+          <div class="xp-head">
+            <span class="xp-title">Customer Service Representative</span>
+            <span class="xp-meta">Callcafe.co.uk, Karachi · Aug — Oct 2025</span>
+          </div>
+          <ul class="xp-list">
+            <li>Delivered inbound and outbound customer support for UK-based restaurant and business clients</li>
+            <li>Resolved customer queries while identifying needs and promoting relevant services</li>
+            <li>Maintained a professional, persuasive communication style under live call conditions</li>
+          </ul>
+        </div>
+
+        <div class="xp-block" style="border-bottom:none;">
+          <div class="xp-head">
+            <span class="xp-title">Customer Chat Support Trainee</span>
+            <span class="xp-meta">IBEX, Karachi · Jun — Jul 2025</span>
+          </div>
+          <ul class="xp-list">
+            <li>Completed structured training in customer chat support</li>
+            <li>Built core skills in customer assistance and retention</li>
+            <li>Applied hands-on practice across live support scenarios</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footnote-box reveal">
+        <strong>Reading this record —</strong> the BPO experience above is service and sales work, not
+        finance — included for what transfers directly: client communication under pressure, persuasion, and
+        working to retention targets. Finance-specific capability sits in the coursework, projects, and skills
+        sections above.
+      </div>
+    </div>
+  </section>
+
+  <hr class="hairline">
+
+  <!-- WHY HIRE ME -->
+  <section>
+    <div class="wrap">
+      <div class="eyebrow section-eyebrow reveal">Closing Statement</div>
+      <h2 class="giant reveal" style="font-size:clamp(40px,9vw,108px);">WHY HIRE ME</h2>
+
+      <div class="why-grid reveal">
+        <p class="why-text">
+          I bring rigor and a genuine interest in how businesses actually run — not just how they're modelled
+          on paper. With grounding in financial and managerial accounting, hands-on project work spanning
+          brand strategy, venture design, and bank research, and skills I'm actively expanding in SQL and
+          Power BI, I focus on getting the numbers right and explaining what they mean. I value clear
+          communication, careful work, and follow-through — and I'm looking for a team where rigorous
+          analysis meets real business decisions.
+        </p>
+        <svg class="why-chart" viewBox="0 0 220 130" aria-hidden="true">
+          <polyline points="5,110 35,95 65,100 95,70 125,78 155,45 185,52 215,18" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="215" cy="18" r="4.5" fill="var(--gold-soft)"/>
+          <circle cx="155" cy="45" r="3" fill="var(--gold)"/>
+          <circle cx="95" cy="70" r="3" fill="var(--gold)"/>
+          <line x1="5" y1="118" x2="215" y2="118" stroke="var(--line-strong)" stroke-width="1"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="closing" id="contact">
+    <div class="wrap">
+      <div class="eyebrow" style="margin-bottom:16px;">Statement of Intent</div>
+      <h2 class="closing-title">Looking for a finance internship where the numbers do the talking.</h2>
+      <p class="closing-sub">
+        Open to internships and entry-level roles in financial analysis, treasury, budgeting, or investment
+        research — based in Karachi, open to remote and hybrid work.
+      </p>
+
+      <div class="closing-actions">
+        <a href="mailto:shahidalimalikk@gmail.com?subject=Opportunity%20for%20Shahid%20Ali" class="btn btn-gold">Email Me →</a>
+        <a href="#" class="btn btn-outline" id="resumeBtnBottom">Download Résumé ↓</a>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="ci-label">Email</div>
+          <div class="ci-value"><a href="mailto:shahidalimalikk@gmail.com">shahidalimalikk@gmail.com</a></div>
+        </div>
+        <div class="contact-item">
+          <div class="ci-label">Phone</div>
+          <div class="ci-value"><a href="tel:+923073716256">+92 307 3716256</a></div>
+        </div>
+        <div class="contact-item">
+          <div class="ci-label">Location</div>
+          <div class="ci-value">Karachi, Pakistan</div>
+        </div>
+      </div>
+
+      <form class="reveal" id="contactForm" style="margin-top:60px; border-top:1px solid var(--line); padding-top:40px;">
+        <div class="eyebrow" style="margin-bottom:6px;">Send a Message Directly</div>
+        <div class="form-row">
+          <div class="field">
+            <label for="fname">Your Name</label>
+            <input id="fname" name="fname" type="text" required>
+          </div>
+          <div class="field">
+            <label for="femail">Your Email</label>
+            <input id="femail" name="femail" type="email" required>
+          </div>
+          <div class="field field-full">
+            <label for="fmsg">Message</label>
+            <textarea id="fmsg" name="fmsg" rows="4" required></textarea>
+          </div>
+        </div>
+        <div class="submit-row">
+          <button type="submit" class="btn btn-gold" style="border:none; cursor:pointer;">Send Message →</button>
+          <span class="form-note" id="formNote">Opens your email client to send directly to Shahid.</span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 Shahid Ali — Prepared for professional review.</span>
+      <span>Karachi, Pakistan</span>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  navToggle.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  const resumeHandler = (e) => {
+    e.preventDefault();
+    alert('Add your résumé PDF to the project folder and link it here (see the note in chat for instructions).');
+  };
+  document.getElementById('resumeBtnTop').addEventListener('click', resumeHandler);
+  document.getElementById('resumeBtnBottom').addEventListener('click', resumeHandler);
+
+  document.getElementById('contactForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('fname').value;
+    const email = document.getElementById('femail').value;
+    const msg = document.getElementById('fmsg').value;
+    const subject = encodeURIComponent('Portfolio enquiry from ' + name);
+    const body = encodeURIComponent(msg + '\n\n— ' + name + ' (' + email + ')');
+    window.location.href = `mailto:shahidalimalikk@gmail.com?subject=${subject}&body=${body}`;
+  });
+</script>
+
+</body>
+</html>
